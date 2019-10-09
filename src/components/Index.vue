@@ -59,7 +59,8 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 40px;
-  margin: 90px;
+  margin: center;
+  margin-top: 90px;
 }
 .index h2{
   font-size: 1.8em;
