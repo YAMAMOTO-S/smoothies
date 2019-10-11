@@ -115,7 +115,6 @@ export default {
 .add-smoothie .delete{
    position: absolute;
    right: 0;
-   botton: 16px;
    color: #aaa;
    font-size: 1.4em;
    cursor: pointer;
