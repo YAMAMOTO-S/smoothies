@@ -1,6 +1,7 @@
 <template>
    <div class="add-smoothie container">
       <h3 class="center-align blue-text">Add New Smoothie Recipe</h3>
+
       <br><br>
 
       <form @submit.prevent="AddSmoothie">
@@ -10,9 +11,10 @@
             <input type="text" name="title" v-model="title">
          </div>
 
-         <div v-for="(ing, index) in ingredients" :key="index">
+         <div v-for="(ing, index) in ingredients" :key="index" class="field">
             <label for="ingredient">Ingredient:</label>
             <input type="text" name="ingredient" v-model="ingredients[index]">
+            <i class="material-icons delete" @click="deleteIng(ing)">delete</i>
          </div>
 
          <div class="field add-ingredient">
@@ -33,7 +35,7 @@
 
 <script>
 import db from '@/firebase/init'
-import slugify from 'slugify'
+import slugify from 'slugify'　//slug化するpackage
 
 
 export default {
@@ -51,7 +53,7 @@ export default {
 
 
    methods: {
-      AddSmoothie(){
+      AddSmoothie(){ //DBに情報を送る
          if(this.title){
             this.feedback = null
             // create a slug
@@ -83,6 +85,11 @@ export default {
          }else{
             this.feedback = 'You must enter a value to add an ingredient'
          }
+      },
+      deleteIng(ing){
+         this.ingredients = this.ingredients.filter(ingredient => {
+            return ingredient != ing
+         })
       }
    }
 }
@@ -103,6 +110,14 @@ export default {
 }
 .add-smoothie .field{
    margin: 20px auto;
+   position: relative;
 }
-
+.add-smoothie .delete{
+   position: absolute;
+   right: 0;
+   botton: 16px;
+   color: #aaa;
+   font-size: 1.4em;
+   cursor: pointer;
+}
 </style>
