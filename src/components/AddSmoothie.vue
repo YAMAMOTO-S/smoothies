@@ -118,5 +118,6 @@ export default {
    color: #aaa;
    font-size: 1.4em;
    cursor: pointer;
+   bottom: 16px;
 }
 </style>
