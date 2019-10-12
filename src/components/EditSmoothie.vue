@@ -1,7 +1,7 @@
 <template>
-   <div v-if="smoothie" class="edit-smoothie container blue-text" >
+   <div v-if="smoothie" class="edit-smoothie container" >
  
-      <h3 class="center-align">{{ smoothie.title }}</h3>
+      <h3 class="center-align  blue-text">{{ smoothie.title }}</h3>
 
       <form @submit.prevent="EditSmoothie">
 
@@ -34,6 +34,8 @@
 
 <script>
 import db from '@/firebase/init'
+import slugify from 'slugify'
+
 
 export default {
    name: 'EditSmoothie',
@@ -44,6 +46,47 @@ export default {
          feedback: null
       }
    },
+   methods: {
+      EditSmoothie(){
+         if(this.smoothie.title){
+            this.feedback = null
+            // create a slug
+            this.smoothie.slug = slugify(this.smoothie.title, {
+               replacement: '-',
+               remove: /[$*_+~.()'"!\-:@]/g,
+               lower: true
+            })
+            db.collection('smoothies').doc(this.smoothie.id).update({
+               title: this.smoothie.title,
+               ingredients: this.smoothie.ingredients,
+               slug: this.smoothie.slug
+            }).then(() => {
+               this.$router.push({name: 'Index'})
+            }).catch(err => {
+               console.log(err)
+            })
+         }else{
+            this.feedback = 'You must enter a smoothie title'
+         }
+      },
+
+      addIng(){
+         if(this.another){
+            this.smoothie.ingredients.push(this.another)
+            this.another =　null
+            this.feedback = null
+         }else{
+            this.feedback = 'You must enter a value to add an ingredient'
+         }
+      },
+
+      deleteIng(ing){
+         this.smoothie.ingredients = this.smoothie.ingredients.filter(ingredient => {
+            return ingredient != ing
+         })
+      }
+   },
+
    created(){
       let ref = db.collection('smoothies').where('slug', '==', this.$route.params.smoothie_slug )
       ref.get().then(snapshot => {
@@ -52,7 +95,7 @@ export default {
             this.smoothie.id = doc.id
          });
       })
-   }
+   },
 }
 </script>
 
